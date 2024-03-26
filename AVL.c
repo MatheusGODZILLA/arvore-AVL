@@ -176,12 +176,13 @@ int numeroNos(PONT raiz) {
 
 // Função que imprime a árvore
 void exibirArvore(PONT raiz) {
-    if (raiz != NULL) {
+    if (raiz != NULL)
+    {
         printf("%i", raiz->chave);
         printf("(");
         exibirArvore(raiz->esq);
-        printf(")");
         exibirArvore(raiz->dir);
+        printf(")");
     }
 }
 
