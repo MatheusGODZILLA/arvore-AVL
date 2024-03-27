@@ -96,15 +96,15 @@ PONT removeNo(PONT raiz, TIPOCHAVE ch) {
 
     } else {
       // Nó com dois filhos: encontrar o sucessor em ordem
-      PONT temp = raiz->dir;
-      while (temp->esq != NULL)
-          temp = temp->esq;
+      PONT temp = raiz->esq;
+      while (temp->dir != NULL)
+          temp = temp->dir;
 
       // Copiar o sucessor em ordem para este nó
       raiz->chave = temp->chave;
 
       // Remover o sucessor em ordem da subárvore direita
-      raiz->dir = removeNo(raiz->dir, temp->chave);
+      raiz->esq = removeNo(raiz->esq, temp->chave);
 
       free(temp);
     }
