@@ -78,69 +78,65 @@ PONT insere(PONT raiz, TIPOCHAVE ch) {
 
 // Função que remove um nó
 PONT removeNo(PONT raiz, TIPOCHAVE ch) {
-    if (raiz == NULL) return raiz;
+  if (raiz == NULL)
+    return raiz;
 
-    if (ch < raiz->chave) 
-        raiz->esq = removeNo(raiz->esq, ch);
-    else if (ch > raiz->chave)
-        raiz->dir = removeNo(raiz->dir, ch);
-    else {
-        // Nó com apenas um filho ou sem filhos
-        if (raiz->esq == NULL || raiz->dir == NULL) {
-            PONT temp = raiz->esq ? raiz->esq : raiz->dir;
+  if (ch < raiz->chave)
+    raiz->esq = removeNo(raiz->esq, ch);
+  else if (ch > raiz->chave)
+    raiz->dir = removeNo(raiz->dir, ch);
+  else {
+    // Nó com apenas um filho ou sem filhos
+    if (raiz->esq == NULL || raiz->dir == NULL) {
+      PONT temp = raiz;
+      if (raiz->esq)
+        raiz = raiz->esq;
+      else
+        raiz = raiz->dir;
 
-            // Caso sem filhos
-            if (temp == NULL) {
-                temp = raiz;
-                raiz = NULL;
-            } else // Caso com um filho
-                *raiz = *temp; // Copia o conteúdo do filho para o nó a ser removido
+    } else {
+      // Nó com dois filhos: encontrar o sucessor em ordem
+      PONT temp = raiz->dir;
+      while (temp->esq != NULL)
+          temp = temp->esq;
 
-            free(temp);
-        } else {
-            // Nó com dois filhos: encontrar o sucessor em ordem
-            PONT temp = raiz->esq;
-            while (temp->dir != NULL)
-                temp = temp->dir;
+      // Copiar o sucessor em ordem para este nó
+      raiz->chave = temp->chave;
 
-            // Copiar o sucessor em ordem para este nó
-            raiz->chave = temp->chave;
+      // Remover o sucessor em ordem da subárvore direita
+      raiz->dir = removeNo(raiz->dir, temp->chave);
 
-            // Remover o sucessor em ordem
-            raiz->dir = removeNo(raiz->dir, temp->chave);
-          free(temp);
-        }
+      free(temp);
     }
+  }
 
-    // Se a árvore tinha apenas um nó, então a atualização da altura não é necessária
-    if (raiz == NULL)
-        return raiz;
+  // Se a árvore tinha apenas um nó, então a atualização da altura não é
+  // necessária
+  if (raiz == NULL)
+    return raiz;
 
-    // Atualizar a altura deste nó
-    raiz->h = 1 + max(altura(raiz->esq), altura(raiz->dir));
+  // Atualizar a altura deste nó
+  raiz->h = 1 + max(altura(raiz->esq), altura(raiz->dir));
 
-    return balanceamento(raiz);
+  return balanceamento(raiz);
 }
 
-PONT balanceamento(PONT p){
-    int fatorBalanceamento = altura(p->dir) - altura(p->esq);
-    if (fatorBalanceamento == 2)
-    {
-        int fatorBalanceamentoFilho = altura(p->dir->dir) - altura(p->dir->esq);
-        if (fatorBalanceamentoFilho == -1)
-            p = direitaEsquerda(p);
-        else
-            p = esquerda(p);
-    }
-    else if (fatorBalanceamento == -2)
-    {
-        int fatorBalanceamentoFilho = altura(p->esq->dir) - altura(p->esq->esq);
-        if (fatorBalanceamentoFilho == 1)
-            p = esquerdaDireita(p);
-        else
-            p = direita(p);
-    }
-    return p;
+PONT balanceamento(PONT p) {
+  int fatorBalanceamento = altura(p->dir) - altura(p->esq);
+  if (fatorBalanceamento == 2) {
+    int fatorBalanceamentoFilho = altura(p->dir->dir) - altura(p->dir->esq);
+    if (fatorBalanceamentoFilho == -1)
+      p = direitaEsquerda(p);
+    else
+      p = esquerda(p);
+  } else if (fatorBalanceamento == -2) {
+    int fatorBalanceamentoFilho = altura(p->esq->dir) - altura(p->esq->esq);
+    if (fatorBalanceamentoFilho == 1)
+      p = esquerdaDireita(p);
+    else
+      p = direita(p);
+  }
+  return p;
 }
 
 // Funções já existentes:
