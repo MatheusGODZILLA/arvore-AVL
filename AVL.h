@@ -7,12 +7,12 @@
 typedef int boolean;
 typedef int TIPOCHAVE;
 
-typedef struct aux{
-    TIPOCHAVE chave;
-    /* Dados armazenados vão aqui */
-    struct aux *esq;
-    struct aux *dir;
-    int h;
+typedef struct aux {
+  TIPOCHAVE chave;
+  /* Dados armazenados vão aqui */
+  struct aux *esq;
+  struct aux *dir;
+  int h;
 } NO, *PONT;
 
 PONT inicializa();
@@ -29,3 +29,4 @@ PONT direita(PONT r);
 PONT esquerda(PONT r);
 PONT esquerdaDireita(PONT r);
 PONT direitaEsquerda(PONT r);
+PONT balanceamento(PONT raiz);

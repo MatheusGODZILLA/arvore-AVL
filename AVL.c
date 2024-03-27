@@ -99,15 +99,16 @@ PONT removeNo(PONT raiz, TIPOCHAVE ch) {
             free(temp);
         } else {
             // Nó com dois filhos: encontrar o sucessor em ordem
-            PONT temp = raiz->dir;
-            while (temp->esq != NULL)
-                temp = temp->esq;
+            PONT temp = raiz->esq;
+            while (temp->dir != NULL)
+                temp = temp->dir;
 
             // Copiar o sucessor em ordem para este nó
             raiz->chave = temp->chave;
 
             // Remover o sucessor em ordem
             raiz->dir = removeNo(raiz->dir, temp->chave);
+          free(temp);
         }
     }
 
@@ -118,25 +119,28 @@ PONT removeNo(PONT raiz, TIPOCHAVE ch) {
     // Atualizar a altura deste nó
     raiz->h = 1 + max(altura(raiz->esq), altura(raiz->dir));
 
-    // Verificar o balanceamento deste nó para determinar se uma rotação é necessária
-    int balance = altura(raiz->esq) - altura(raiz->dir);
+    return balanceamento(raiz);
+}
 
-    // Caso de desbalanceamento à esquerda
-    if (balance > 1) {
-        if (altura(raiz->esq->esq) >= altura(raiz->esq->dir))
-            raiz = direita(raiz);
+PONT balanceamento(PONT p){
+    int fatorBalanceamento = altura(p->dir) - altura(p->esq);
+    if (fatorBalanceamento == 2)
+    {
+        int fatorBalanceamentoFilho = altura(p->dir->dir) - altura(p->dir->esq);
+        if (fatorBalanceamentoFilho == -1)
+            p = direitaEsquerda(p);
         else
-            raiz = esquerdaDireita(raiz);
+            p = esquerda(p);
     }
-    // Caso de desbalanceamento à direita
-    else if (balance < -1) {
-        if (altura(raiz->dir->dir) >= altura(raiz->dir->esq))
-            raiz = esquerda(raiz);
+    else if (fatorBalanceamento == -2)
+    {
+        int fatorBalanceamentoFilho = altura(p->esq->dir) - altura(p->esq->esq);
+        if (fatorBalanceamentoFilho == 1)
+            p = esquerdaDireita(p);
         else
-            raiz = direitaEsquerda(raiz);
+            p = direita(p);
     }
-
-    return raiz;
+    return p;
 }
 
 // Funções já existentes:
